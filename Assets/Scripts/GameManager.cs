@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts.Helper;
+using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
@@ -37,9 +38,12 @@ public class GameManager : MonoBehaviour
     };
 
     private CubeBehaviour[, ,] _level;
+    private PuzzleBuilder _puzzleBuilder;
+
     private CubeBehaviour _selectedObject = null;
     private Stack<Turn> _turns = new Stack<Turn>();
     private RoundTimer _roundTimer;
+    private Texture[] _cubeTextures;
 
     private WindowResizeWatcher _resizeWatcher = new WindowResizeWatcher();
 
@@ -48,10 +52,14 @@ public class GameManager : MonoBehaviour
     {
         _roundTimer = GetComponent<RoundTimer>();
 
+        _cubeTextures = Resources.LoadAll<Texture>("Textures");
+        _cubeTextures.OrderBy(tex => tex.name);
+
         StartRound(0);
         UndoButton.ButtonClickedEvent += OnUndoButtonClicked;
 
-        _resizeWatcher.ResizeEvent += (int width, int height) => {
+        _resizeWatcher.ResizeEvent += (int width, int height) =>
+        {
             float camHalfHeight = GUICamera.orthographicSize;
             float camHalfWidth = GUICamera.aspect * camHalfHeight;
             Vector3 rightBottomPosition = new Vector3(camHalfWidth, -camHalfHeight, 0.0f) + GUICamera.transform.position;
@@ -59,9 +67,9 @@ public class GameManager : MonoBehaviour
             UndoButton.transform.position = rightBottomPosition;
         };
         StartCoroutine(_resizeWatcher.CheckForResize());
-    }   
+    }
 
-    private void StartRound(uint roundIndex)
+    private void StartRound(int roundIndex)
     {
         // Reset round properties
         _selectedObject = null;
@@ -69,41 +77,82 @@ public class GameManager : MonoBehaviour
         Score = 0;
         _roundTimer.Reset();
 
-        // TODO: Generate new level
+        // Generate new level
+        int levelSize = 3 + roundIndex * 2;
+        _level = new CubeBehaviour[levelSize, levelSize, levelSize];
+        _puzzleBuilder = new PuzzleBuilder();
+        List<int> tileIdentifier = new List<int>();
+        tileIdentifier.AddRange(new int[] { 1, 2, 3 });
+        int[, ,] levelDesc = _puzzleBuilder.GenerateLevel(levelSize, tileIdentifier);
 
-        // DUMMY LEVEL
-        GameObject cube0 = (GameObject)GameObject.Instantiate(CubePrefab, Vector3.zero, Quaternion.identity);
-        cube0.GetComponent<CubeBehaviour>().OnClicked += OnCubeClicked;
-        GameObject cube1 = (GameObject)GameObject.Instantiate(CubePrefab, new Vector3(0, 5, 0), Quaternion.identity);
-        cube1.GetComponent<CubeBehaviour>().OnClicked += OnCubeClicked;
+        for (int x = 0; x < levelSize; ++x)
+        {
+            for (int y = 0; y < levelSize; ++y)
+            {
+                for (int z = 0; z < levelSize; ++z)
+                {
+                    GameObject gameObject = (GameObject)GameObject.Instantiate(CubePrefab, Vector3.zero, Quaternion.identity);
+                    _level[x, y, z] = gameObject.GetComponent<CubeBehaviour>();
+                    _level[x, y, z].OnClicked += OnCubeClicked;
+                    _level[x, y, z].Position = new Vector3(x, y, z);
+                    _level[x, y, z].TypeIndex = levelDesc[x, y, z];
+
+                    if (_cubeTextures.Length <= levelDesc[x, y, z])
+                    {
+                        Debug.LogError("Not enough cube textures!");
+                        continue;
+                    }
+                    ((MeshRenderer)_level[x, y, z].renderer).material.mainTexture = _cubeTextures[levelDesc[x, y, z]];
+                }
+            }
+        }
     }
 
     private void OnCubeClicked(CubeBehaviour cubeBehaviour)
     {
-        // TODO: Check if this even possible
-        if (_selectedObject == null)
+        // Don't select the middle object.
+        if(cubeBehaviour.TypeIndex == 0)
         {
-            _selectedObject = cubeBehaviour;
-            _selectedObject.Select();
-        }
-        else if (cubeBehaviour == _selectedObject)
-        {
-            _selectedObject.Unselect();
-            _selectedObject = null;
+            // TODO: Not possible sound event.
         }
         else
         {
-            Turn newTurn = new Turn(_selectedObject, cubeBehaviour);
-            newTurn.Do();
-            _turns.Push(newTurn);
-            _selectedObject = null;
+            // TODO: Check if removable
+            //List<Vector3> neighbors = _puzzleBuilder.GetNeighbors(cubeBehaviour.GridPosition);
+
+            if (_selectedObject == null)
+            {
+                _selectedObject = cubeBehaviour;
+                _selectedObject.Select();
+            }
+            else if (cubeBehaviour == _selectedObject)
+            {
+                _selectedObject.Unselect();
+                _selectedObject = null;
+            }
+            else
+            {
+                if (cubeBehaviour.TypeIndex != _selectedObject.TypeIndex)
+                {
+                    // TODO: Not possible sound event.
+                }
+                else
+                {
+                    Turn newTurn = new Turn(_selectedObject, cubeBehaviour);
+                    newTurn.Do();
+                    _turns.Push(newTurn);
+                    _selectedObject = null;
+
+                    // TODO: Check win condition.
+                }
+            }
         }
     }
 
     private void OnUndoButtonClicked()
     {
         // TODO: Feedback etc.
-        if(_turns.Count > 0)
+        if (_turns.Count > 0)
         {
             _turns.Pop().Undo();
             _roundTimer.AddUndoPenalty();
