@@ -245,6 +245,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1902648044}
   - 114: {fileID: 1902648043}
+  - 114: {fileID: 1902648045}
   m_Layer: 0
   m_Name: _gm
   m_TagString: Untagged
@@ -278,6 +279,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
+--- !u!114 &1902648045
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1902648042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e255dd68bfb173049a4fbb50d692b237, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Skin: {fileID: 11400000, guid: dd85d491564e9294ebd65a986f3683a9, type: 2}
+  UndoTimePenalty: 20
 --- !u!1 &1962255126
 GameObject:
   m_ObjectHideFlags: 0

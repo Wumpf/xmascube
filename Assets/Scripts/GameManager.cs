@@ -6,7 +6,6 @@ using Assets.Scripts.Helper;
 public class GameManager : MonoBehaviour
 {
     public uint Score { get; private set; }
-    public float RoundTime { get; private set; }
 
     public Camera GUICamera;
     public FancyButtonScript UndoButton;
@@ -40,12 +39,15 @@ public class GameManager : MonoBehaviour
     private CubeBehaviour[, ,] _level;
     private CubeBehaviour _selectedObject = null;
     private Stack<Turn> _turns = new Stack<Turn>();
+    private RoundTimer _roundTimer;
 
     private WindowResizeWatcher _resizeWatcher = new WindowResizeWatcher();
 
     // Use this for initialization
     void Start()
     {
+        _roundTimer = GetComponent<RoundTimer>();
+
         StartRound(0);
         UndoButton.ButtonClickedEvent += OnUndoButtonClicked;
 
@@ -57,13 +59,7 @@ public class GameManager : MonoBehaviour
             UndoButton.transform.position = rightBottomPosition;
         };
         StartCoroutine(_resizeWatcher.CheckForResize());
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        RoundTime += Time.deltaTime;
-    }
+    }   
 
     private void StartRound(uint roundIndex)
     {
@@ -71,7 +67,7 @@ public class GameManager : MonoBehaviour
         _selectedObject = null;
         _turns.Clear();
         Score = 0;
-        RoundTime = 0.0f;
+        _roundTimer.Reset();
 
         // TODO: Generate new level
 
@@ -82,10 +78,8 @@ public class GameManager : MonoBehaviour
         cube1.GetComponent<CubeBehaviour>().OnClicked += OnCubeClicked;
     }
 
-    void OnCubeClicked(CubeBehaviour cubeBehaviour)
+    private void OnCubeClicked(CubeBehaviour cubeBehaviour)
     {
-        Debug.Log("Clicked!");
-
         // TODO: Check if this even possible
         if (_selectedObject == null)
         {
@@ -112,6 +106,7 @@ public class GameManager : MonoBehaviour
         if(_turns.Count > 0)
         {
             _turns.Pop().Undo();
+            _roundTimer.AddUndoPenalty();
         }
     }
 }
