@@ -11,15 +11,10 @@ public class CubeBehaviour : MonoBehaviour {
 	public AudioClip ReappearSound;
 
 	private Vector3 _pos = Vector3.zero;
-	private Material _mat;
-	private Color _originalColor;
-
 
 	// Use this for initialization
 	public void Start() 
 	{
-		_mat = this.renderer.material;
-		_originalColor = _mat.color;
 	}
 
 	public void Update()
@@ -49,20 +44,12 @@ public class CubeBehaviour : MonoBehaviour {
 
 	public void Select()
 	{
-		if(_mat == null)
-		{
-			return;
-		}
-		_mat.color = new Color(0, 0, 0, 255);
+		renderer.material.shader = Shader.Find("Self-Illumin/Parallax Diffuse");
 	}
 
 	public void Unselect()
 	{
-		if(_mat == null)
-		{
-			return;
-		}
-		_mat.color = _originalColor;
+		renderer.material.shader = Shader.Find("Diffuse");
 	}
 
 	public void Disappear()
