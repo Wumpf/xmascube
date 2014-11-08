@@ -1,21 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 [RequireComponent( typeof( Collider2D ) )]
 [RequireComponent( typeof( SpriteRenderer ) )]
 public class FancyButtonScript : MonoBehaviour
 {
-	public interface IButtonClickHandler
-	{
-		void OnButtonClicked();
-	}
-
-	public IButtonClickHandler ClickHandler;
+    public event Action ButtonClickedEvent;
 
 	public string ButtonText;
-
-	public GUISkin GuiSkin;
-	public string TextStyle = "FancyButtonText";
 
 	public Sprite NormalSprite;
 	public Sprite HoverSprite;
@@ -43,18 +36,15 @@ public class FancyButtonScript : MonoBehaviour
 
 	void OnMouseUp()
 	{
-		if( ClickHandler == null )
-			Debug.LogWarning( string.Format("{0}: Missing clickHandler", this) );
-		else
-			ClickHandler.OnButtonClicked();
+        if (ButtonClickedEvent == null)
+            Debug.LogWarning(string.Format("{0}: Missing ButtonClicked event", this));
+        else
+            ButtonClickedEvent();
 	}
 
 	void OnGUI()
 	{
-		GUI.skin = GuiSkin;
-
 		Rect worldRect = Rect.MinMaxRect( renderer.bounds.min.x, renderer.bounds.max.y, renderer.bounds.max.x, renderer.bounds.min.y );
 		Rect screenRect = worldRect.WorldToScreenRect();
-		GUI.Label( screenRect, ButtonText, TextStyle );
 	}
 }

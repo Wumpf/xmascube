@@ -1,9 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts.Helper;
 
 public class GameManager : MonoBehaviour
 {
+    public uint Score { get; private set; }
+    public float RoundTime { get; private set; }
+
+    public Camera GUICamera;
+    public FancyButtonScript UndoButton;
+
     private class Turn
     {
         private GameObject _removedObject0;
@@ -33,14 +40,22 @@ public class GameManager : MonoBehaviour
     private GameObject _selectedObject = null;
     private Stack<Turn> _turns = new Stack<Turn>();
 
-    public uint Score { get; private set; }
-    public float RoundTime { get; private set; }
-
+    private WindowResizeWatcher _resizeWatcher = new WindowResizeWatcher();
 
     // Use this for initialization
     void Start()
     {
         StartRound(0);
+        UndoButton.ButtonClickedEvent += OnUndoButtonClicked;
+
+        _resizeWatcher.ResizeEvent += (int width, int height) => {
+            float camHalfHeight = GUICamera.orthographicSize;
+            float camHalfWidth = GUICamera.aspect * camHalfHeight;
+            Vector3 rightBottomPosition = new Vector3(camHalfWidth, -camHalfHeight, 0.0f) + GUICamera.transform.position;
+            rightBottomPosition += new Vector3(-UndoButton.ActiveSprite.bounds.size.x * 0.5f, UndoButton.ActiveSprite.bounds.size.y * 0.5f, 0.5f);
+            UndoButton.transform.position = rightBottomPosition;
+        };
+        StartCoroutine(_resizeWatcher.CheckForResize());
     }
 
     // Update is called once per frame
@@ -49,7 +64,7 @@ public class GameManager : MonoBehaviour
         RoundTime += Time.deltaTime;
     }
 
-    void StartRound(uint roundIndex)
+    private void StartRound(uint roundIndex)
     {
         // Reset round properties
         _selectedObject = null;
@@ -58,5 +73,14 @@ public class GameManager : MonoBehaviour
         RoundTime = 0.0f;
 
         // TODO: Generate new level
+    }
+
+    private void OnUndoButtonClicked()
+    {
+        // TODO: Feedback etc.
+        if(_turns.Count > 0)
+        {
+            _turns.Pop().Undo();
+        }
     }
 }
