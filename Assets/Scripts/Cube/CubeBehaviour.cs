@@ -88,7 +88,7 @@ public class CubeBehaviour : MonoBehaviour {
 	private IEnumerator DisappearCoroutine() 
 	{
 
-		while(this.transform.localScale.x >= 0)
+		while(this.transform.localScale.x >= 0 || audio.isPlaying)
 		{
 			this.transform.localScale -= new Vector3(0.1f,0.1f, 0.1f);
 			yield return new WaitForEndOfFrame();
