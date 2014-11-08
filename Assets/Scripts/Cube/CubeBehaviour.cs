@@ -2,29 +2,16 @@
 using System.Collections;
 
 public class CubeBehaviour : MonoBehaviour {
-
-	private bool _selected = false;
+	
 	private Material _mat;
 	private Color _originalColor;
 	// Use this for initialization
 	void Start () 
 	{
-		/*
-		mat = renderer.material;// (Material)this.GetComponent(Material);
-		if(mat == null)
-		{
-			Debug.LogError("No material assigned to cube!");
-		}
-		*/  
 		_mat = this.renderer.material;
 		_originalColor = _mat.color;
 	}
-	
-	// Update is called once per frame
-	void Update () 
-	{
-	
-	}
+
 
 	public void OnGUI()
 	{
@@ -36,7 +23,6 @@ public class CubeBehaviour : MonoBehaviour {
 			{
 				if(hit.transform.Equals(this.transform))
 				{
-					Debug.LogError("hit this");
 					//add here a delegate
 					OnClicked();
 				}
@@ -51,7 +37,6 @@ public class CubeBehaviour : MonoBehaviour {
 
 	public void Select()
 	{
-		_selected = true;
 		if(_mat == null)
 		{
 			return;
@@ -61,7 +46,6 @@ public class CubeBehaviour : MonoBehaviour {
 
 	public void Unselect()
 	{
-		_selected = false;
 		if(_mat == null)
 		{
 			return;
@@ -87,7 +71,6 @@ public class CubeBehaviour : MonoBehaviour {
 			this.transform.localScale -= new Vector3(0.1f,0.1f, 0.1f);
 			yield return new WaitForEndOfFrame();
 		}
-		_selected = false;
 		this.gameObject.SetActive(false);	
 	}
 
@@ -103,6 +86,5 @@ public class CubeBehaviour : MonoBehaviour {
 			this.transform.localScale += new Vector3(0.1f,0.1f, 0.1f);
 			yield return new WaitForEndOfFrame();
 		}
-		_selected = false;	
 	}
 }
