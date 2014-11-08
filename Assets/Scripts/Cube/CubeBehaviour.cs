@@ -3,7 +3,7 @@ using System.Collections;
 
 public class CubeBehaviour : MonoBehaviour {
 
-	public delegate void ClickAction(Vector3 pos);
+	public delegate void ClickAction(CubeBehaviour cubeBehaviour);
 	public static event ClickAction OnClicked;
 
 	private Vector3 _pos = Vector3.zero;
@@ -20,6 +20,7 @@ public class CubeBehaviour : MonoBehaviour {
 	public Vector3 Position 
 	{
 		set { _pos = value; }
+		get { return _pos; }
 	}
 
 	public void OnGUI()
@@ -34,7 +35,7 @@ public class CubeBehaviour : MonoBehaviour {
 				{
 					//add here a delegate
 					if(OnClicked != null)
-						OnClicked(_pos);
+						OnClicked(this);
 				}
 			}
 		}
