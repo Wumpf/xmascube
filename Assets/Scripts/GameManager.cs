@@ -84,11 +84,16 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Clicked!");
 
-        // TODO: IS this even possible
+        // TODO: Check if this even possible
         if (_selectedObject == null)
         {
             _selectedObject = cubeBehaviour;
             _selectedObject.Select();
+        }
+        else if (cubeBehaviour != _selectedObject)
+        {
+            _selectedObject.Unselect();
+            _selectedObject = null;
         }
         else
         {

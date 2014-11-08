@@ -113,7 +113,7 @@ Behaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 558016739}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!20 &558016743
 Camera:
   m_ObjectHideFlags: 0
@@ -138,7 +138,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 4294967263
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -169,7 +169,7 @@ GameObject:
   - 212: {fileID: 1338933442}
   - 61: {fileID: 1338933441}
   - 114: {fileID: 1338933440}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: undo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -265,6 +265,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GUICamera: {fileID: 1962255130}
   UndoButton: {fileID: 1338933440}
+  CubePrefab: {fileID: 100000, guid: d554d2f7acdb1894e9349d957261a650, type: 2}
 --- !u!4 &1902648044
 Transform:
   m_ObjectHideFlags: 0
@@ -325,7 +326,7 @@ Camera:
   m_GameObject: {fileID: 1962255126}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
+  m_ClearFlags: 4
   m_BackGroundColor: {r: .192156866, g: .301960796, b: .474509805, a: .0196078438}
   m_NormalizedViewPortRect:
     serializedVersion: 2
@@ -341,7 +342,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 32
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
