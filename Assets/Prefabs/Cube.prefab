@@ -78,9 +78,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00f399e8bf13fe0439efa92d117dddc4, type: 3}
+  m_Script: {fileID: 11500000, guid: 15a9629b4ba1e3f4fb0ac4773d2db5b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  FailSound: {fileID: 8300000, guid: 32e9125332578954c984b53209d550d1, type: 3}
+  DisappearSound: {fileID: 8300000, guid: 32e9125332578954c984b53209d550d1, type: 3}
+  ReappearSound: {fileID: 8300000, guid: 32e9125332578954c984b53209d550d1, type: 3}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

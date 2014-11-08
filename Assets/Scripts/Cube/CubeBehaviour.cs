@@ -6,9 +6,14 @@ public class CubeBehaviour : MonoBehaviour {
 	public delegate void ClickAction(CubeBehaviour cubeBehaviour);
 	public static event ClickAction OnClicked;
 
+	public AudioClip FailSound;
+	public AudioClip DisappearSound;
+	public AudioClip ReappearSound;
+
 	private Vector3 _pos = Vector3.zero;
 	private Material _mat;
 	private Color _originalColor;
+
 
 	// Use this for initialization
 	public void Start() 
@@ -36,6 +41,8 @@ public class CubeBehaviour : MonoBehaviour {
 					//add here a delegate
 					if(OnClicked != null)
 						OnClicked(this);
+
+					Disappear();
 				}
 			}
 		}
@@ -61,6 +68,10 @@ public class CubeBehaviour : MonoBehaviour {
 
 	public void Disappear()
 	{
+		if(DisappearSound != null)
+		{
+			audio.PlayOneShot(DisappearSound,50);
+		}
 		StartCoroutine("DisappearCoroutine");
 	}
 
@@ -72,6 +83,7 @@ public class CubeBehaviour : MonoBehaviour {
 
 	private IEnumerator DisappearCoroutine() 
 	{
+
 		while(this.transform.localScale.x >= 0)
 		{
 			this.transform.localScale -= new Vector3(0.1f,0.1f, 0.1f);
