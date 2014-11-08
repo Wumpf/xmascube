@@ -26,12 +26,14 @@ public class GameManager : MonoBehaviour
         public void Do()
         {
             _removedObject0.Disappear();
-            _removedObject0.Disappear();
+            _removedObject1.Disappear();
         }
         public void Undo()
         {
+            _removedObject0.gameObject.SetActive(true);
+            _removedObject1.gameObject.SetActive(true);
             _removedObject0.Reappear();
-            _removedObject0.Reappear();
+            _removedObject1.Reappear();
         }
     };
 
@@ -90,7 +92,7 @@ public class GameManager : MonoBehaviour
             _selectedObject = cubeBehaviour;
             _selectedObject.Select();
         }
-        else if (cubeBehaviour != _selectedObject)
+        else if (cubeBehaviour == _selectedObject)
         {
             _selectedObject.Unselect();
             _selectedObject = null;
@@ -100,6 +102,7 @@ public class GameManager : MonoBehaviour
             Turn newTurn = new Turn(_selectedObject, cubeBehaviour);
             newTurn.Do();
             _turns.Push(newTurn);
+            _selectedObject = null;
         }
     }
 
