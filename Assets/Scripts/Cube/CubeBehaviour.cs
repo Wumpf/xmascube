@@ -2,16 +2,25 @@
 using System.Collections;
 
 public class CubeBehaviour : MonoBehaviour {
-	
+
+	public delegate void ClickAction(Vector3 pos);
+	public static event ClickAction OnClicked;
+
+	private Vector3 _pos = Vector3.zero;
 	private Material _mat;
 	private Color _originalColor;
+
 	// Use this for initialization
-	void Start () 
+	public void Start() 
 	{
 		_mat = this.renderer.material;
 		_originalColor = _mat.color;
 	}
 
+	public Vector3 Position 
+	{
+		set { _pos = value; }
+	}
 
 	public void OnGUI()
 	{
@@ -24,15 +33,11 @@ public class CubeBehaviour : MonoBehaviour {
 				if(hit.transform.Equals(this.transform))
 				{
 					//add here a delegate
-					OnClicked();
+					if(OnClicked != null)
+						OnClicked(_pos);
 				}
 			}
 		}
-	}
-
-	public void OnClicked()
-	{
-		Debug.LogError("I was clicked!");
 	}
 
 	public void Select()
