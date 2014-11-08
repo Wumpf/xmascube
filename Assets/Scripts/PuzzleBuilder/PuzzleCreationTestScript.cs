@@ -32,6 +32,7 @@ public class PuzzleCreationTestScript : MonoBehaviour {
             case 2: return Color.blue;
             case 3: return Color.cyan;
             case 4: return Color.red;
+            case -1: return Color.white;
             default: return Color.black;
         }
     }

@@ -317,6 +317,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5eb440d1143c300489e0a09cc0e034e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Size: 7
   Cube: {fileID: 95890972}
 --- !u!4 &2119576336
 Transform:
