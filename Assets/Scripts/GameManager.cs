@@ -10,13 +10,14 @@ public class GameManager : MonoBehaviour
 
     public Camera GUICamera;
     public FancyButtonScript UndoButton;
+    public GameObject CubePrefab;
 
     private class Turn
     {
-        private GameObject _removedObject0;
-        private GameObject _removedObject1;
+        private CubeBehaviour _removedObject0;
+        private CubeBehaviour _removedObject1;
 
-        Turn(GameObject removedObject0, GameObject removedObject1)
+        public Turn(CubeBehaviour removedObject0, CubeBehaviour removedObject1)
         {
             _removedObject0 = removedObject0;
             _removedObject1 = removedObject1;
@@ -24,20 +25,18 @@ public class GameManager : MonoBehaviour
 
         public void Do()
         {
-            // TODO: Call select
-            _removedObject0.SetActive(false);
-            _removedObject0.SetActive(false);
+            _removedObject0.Disappear();
+            _removedObject0.Disappear();
         }
         public void Undo()
         {
-            // TODO: Call unselect
-            _removedObject0.SetActive(true);
-            _removedObject0.SetActive(true);
+            _removedObject0.Reappear();
+            _removedObject0.Reappear();
         }
     };
 
-    private GameObject[, ,] _level;
-    private GameObject _selectedObject = null;
+    private CubeBehaviour[, ,] _level;
+    private CubeBehaviour _selectedObject = null;
     private Stack<Turn> _turns = new Stack<Turn>();
 
     private WindowResizeWatcher _resizeWatcher = new WindowResizeWatcher();
@@ -73,6 +72,30 @@ public class GameManager : MonoBehaviour
         RoundTime = 0.0f;
 
         // TODO: Generate new level
+
+        // DUMMY LEVEL
+        GameObject cube0 = (GameObject)GameObject.Instantiate(CubePrefab, Vector3.zero, Quaternion.identity);
+        cube0.GetComponent<CubeBehaviour>().OnClicked += OnCubeClicked;
+        GameObject cube1 = (GameObject)GameObject.Instantiate(CubePrefab, new Vector3(0, 5, 0), Quaternion.identity);
+        cube1.GetComponent<CubeBehaviour>().OnClicked += OnCubeClicked;
+    }
+
+    void OnCubeClicked(CubeBehaviour cubeBehaviour)
+    {
+        Debug.Log("Clicked!");
+
+        // TODO: IS this even possible
+        if (_selectedObject == null)
+        {
+            _selectedObject = cubeBehaviour;
+            _selectedObject.Select();
+        }
+        else
+        {
+            Turn newTurn = new Turn(_selectedObject, cubeBehaviour);
+            newTurn.Do();
+            _turns.Push(newTurn);
+        }
     }
 
     private void OnUndoButtonClicked()

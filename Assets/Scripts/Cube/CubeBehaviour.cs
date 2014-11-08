@@ -4,7 +4,7 @@ using System.Collections;
 public class CubeBehaviour : MonoBehaviour {
 
 	public delegate void ClickAction(CubeBehaviour cubeBehaviour);
-	public static event ClickAction OnClicked;
+	public event ClickAction OnClicked;
 
 	public AudioClip FailSound;
 	public AudioClip DisappearSound;
@@ -41,8 +41,6 @@ public class CubeBehaviour : MonoBehaviour {
 					//add here a delegate
 					if(OnClicked != null)
 						OnClicked(this);
-
-					Disappear();
 				}
 			}
 		}
