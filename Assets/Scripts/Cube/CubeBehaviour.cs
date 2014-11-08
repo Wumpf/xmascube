@@ -37,9 +37,15 @@ public class CubeBehaviour : MonoBehaviour {
 
 	public Vector3 Position 
 	{
-		set { _pos = value; }
+        set
+        {
+            _pos = value;
+            transform.position = Vector3.Scale(value, transform.renderer.bounds.size);
+        }
 		get { return _pos; }
 	}
+
+    public int TypeIndex { get; set; }
 	
 
 	public void Select()
