@@ -67,6 +67,7 @@ public class CubeBehaviour : MonoBehaviour {
 
 	public void Disappear()
 	{
+		Unselect();
 		if(DisappearSound != null)
 		{
 			audio.PlayOneShot(DisappearSound,50);
@@ -76,6 +77,10 @@ public class CubeBehaviour : MonoBehaviour {
 
 	public void Reappear()
 	{
+		if(ReappearSound != null)
+		{
+			audio.PlayOneShot(ReappearSound,50);
+		}
 		StartCoroutine("ReappearCoroutine");
 	}
 
