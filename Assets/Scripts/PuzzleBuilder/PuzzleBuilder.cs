@@ -29,7 +29,7 @@ public class PuzzleBuilder
         _size = size;
         _numberOfTiles = size * size * size;
         generateAvialablePairs(tileIdentifier, _numberOfTiles);
-        return generateLevel();
+        return generateLevel2();
     }
 
     public List<Vector3> GetNeighbors(Vector3 forPosition)
@@ -60,7 +60,7 @@ public class PuzzleBuilder
         {
             _numberOfAvialablePairs[_numberOfAvialablePairs.Keys.ToList()[Random.Range(0,_numberOfAvialablePairs.Keys.Count)]] += 1;
         }
-        if(_numberOfTiles != _numberOfAvialablePairs.Values.Sum())
+        if(_numberOfTiles * 2 != _numberOfAvialablePairs.Values.Sum())
             Debug.Log(string.Format("Wrong number of tiles {0} {1}", numberOfTiles, _numberOfAvialablePairs.Values.Sum()));
     }
 
@@ -145,32 +145,62 @@ public class PuzzleBuilder
     private int[,,] generateLevel2()
     {
         var result = new int[_size,_size,_size];
+        // all fileds are unused
         result.FillAllWithValue(-1);
-        result[_size/2,_size/2,_size/2] = 0;
-        _freePositions = getDictionaryOfFreePositions(result);
+        
+        var center = new Vector3((int)_size/2,(int)_size/2,(int)_size/2);
+        var positionsAndSolidNeighbors = getDictionaryOfPositionsAndSolitNeighbors(result, center);
+
         while(_numberOfAvialablePairs.Any())
         {
             var key = _numberOfAvialablePairs.Keys.ToList()[Random.Range(0,_numberOfAvialablePairs.Keys.Count)];
             var pairs = _numberOfAvialablePairs[key];
             
-            var pos1 = getRandomFreePosition(result);
-            _freePositions.Remove(pos1);
-            var pos2 = getRandomFreePosition(result);
-            _freePositions.Remove(pos2);
+            var pos1 = getRandomPossibleMove(result, positionsAndSolidNeighbors);
+            positionsAndSolidNeighbors.Remove(pos1);
+            var pos2 = getRandomPossibleMove(result, positionsAndSolidNeighbors);
+            positionsAndSolidNeighbors.Remove(pos2);
             
             result[(int)pos1.x,(int)pos1.y,(int)pos1.z] = key;
             result[(int)pos2.x,(int)pos2.y,(int)pos2.z] = key;
             foreach(var pos in GetNeighbors(pos1))
-                if(_freePositions.ContainsKey(pos)) _freePositions[pos] ++;
+                if(positionsAndSolidNeighbors.ContainsKey(pos)) positionsAndSolidNeighbors[pos] --;
             foreach(var pos in GetNeighbors(pos2))
-                if(_freePositions.ContainsKey(pos)) _freePositions[pos] ++;
+                if(positionsAndSolidNeighbors.ContainsKey(pos)) positionsAndSolidNeighbors[pos] --;
             if(--pairs == 0)
                 _numberOfAvialablePairs.Remove(key);
             else
                 _numberOfAvialablePairs[key] = pairs;
         }
-        
+
+        // center should always be 0 currently it is -1 because the algorithmen is not allowed to use the center field
+        result[_size/2,_size/2,_size/2] = 0;
         return result;
+    }
+
+    private Dictionary<Vector3, int> getDictionaryOfPositionsAndSolitNeighbors(int[,,] field, Vector3 center)
+    {
+        var result = new Dictionary<Vector3, int> ();
+        var tempPos = Vector3.zero;
+        for(int i = 0; i < field.GetLength(0); ++i)
+            for(int j = 0; j < field.GetLength(1); ++j)
+                for(int k = 0; k < field.GetLength(2); ++k)
+            {
+                if(field[i,j,k] == -1 && !(i == center.x && j == center.y && k == center.z))
+                {
+                    tempPos.x = i;
+                    tempPos.y = j;
+                    tempPos.z = k;
+                    result.Add(tempPos, GetNeighbors(tempPos).Where( n => field[(int)n.x,(int)n.y,(int)n.z] == -1).Count());
+                }
+            }
+        return result;
+    }
+
+    private Vector3 getRandomPossibleMove(int[,,] field, Dictionary<Vector3, int> positionsAndSolidNeighbors)
+    {
+        var possibleMoves = positionsAndSolidNeighbors.Where(kv => kv.Value < 5).ToList();
+        return possibleMoves[Random.Range(0, possibleMoves.Count)].Key;
     }
 
     #endregion
