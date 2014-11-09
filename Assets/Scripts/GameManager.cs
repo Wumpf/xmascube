@@ -87,7 +87,7 @@ public class GameManager : MonoBehaviour
         if (_level != null)
         {
             foreach (var obj in _level)
-                GameObject.Destroy(obj);
+                GameObject.Destroy(obj.gameObject);
         }
         _selectedObject = null;
         _turns.Clear();
