@@ -38,11 +38,7 @@ public class CubeBehaviour : MonoBehaviour {
 
 	public Vector3 GridPosition 
 	{
-        set
-        {
-            _pos = value;
-            transform.position = Vector3.Scale(value, transform.renderer.bounds.size);
-        }
+        set { _pos = value; }
 		get { return _pos; }
 	}
 

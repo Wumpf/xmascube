@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     public Camera GUICamera;
     public FancyButtonScript UndoButton;
     public GameObject CubePrefab;
+    public GameObject CubeParentObject;
 
     private class Turn
     {
@@ -44,20 +45,23 @@ public class GameManager : MonoBehaviour
     private Stack<Turn> _turns = new Stack<Turn>();
     private RoundTimer _roundTimer;
     private Texture[] _cubeTextures;
+    private Quaternion _mainCameraRotationDest;
 
     private WindowResizeWatcher _resizeWatcher = new WindowResizeWatcher();
 
     // Use this for initialization
     void Start()
     {
+        _mainCameraRotationDest = Camera.main.transform.rotation;
         _roundTimer = GetComponent<RoundTimer>();
 
         _cubeTextures = Resources.LoadAll<Texture>("Textures");
         _cubeTextures.OrderBy(tex => tex.name);
 
         StartRound(0);
-        UndoButton.ButtonClickedEvent += OnUndoButtonClicked;
 
+        // Undo button.
+        UndoButton.ButtonClickedEvent += OnUndoButtonClicked;
         _resizeWatcher.ResizeEvent += (int width, int height) =>
         {
             float camHalfHeight = GUICamera.orthographicSize;
@@ -67,6 +71,11 @@ public class GameManager : MonoBehaviour
             UndoButton.transform.position = rightBottomPosition;
         };
         StartCoroutine(_resizeWatcher.CheckForResize());
+    }
+
+    void OnDestroy()
+    {
+        _resizeWatcher.Dispose();
     }
 
     private void StartRound(int roundIndex)
@@ -82,7 +91,7 @@ public class GameManager : MonoBehaviour
         _level = new CubeBehaviour[levelSize, levelSize, levelSize];
         _puzzleBuilder = new PuzzleBuilder();
         List<int> tileIdentifier = new List<int>();
-        tileIdentifier.AddRange(new int[] { 1, 2, 3 });
+        tileIdentifier.AddRange(new int[] { 1, 2, 3, 4, 5 });
         int[, ,] levelDesc = _puzzleBuilder.GenerateLevel(levelSize, tileIdentifier);
 
         for (int x = 0; x < levelSize; ++x)
@@ -92,6 +101,10 @@ public class GameManager : MonoBehaviour
                 for (int z = 0; z < levelSize; ++z)
                 {
                     GameObject gameObject = (GameObject)GameObject.Instantiate(CubePrefab, Vector3.zero, Quaternion.identity);
+                    gameObject.transform.parent = CubeParentObject.transform;
+                    gameObject.transform.position = Vector3.Scale(new Vector3(x - levelSize / 2, y - levelSize / 2, z - levelSize / 2),
+                                                                  gameObject.transform.renderer.bounds.size);
+
                     _level[x, y, z] = gameObject.GetComponent<CubeBehaviour>();
                     _level[x, y, z].OnClicked += OnCubeClicked;
                     _level[x, y, z].GridPosition = new Vector3(x, y, z);
@@ -106,6 +119,7 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+        Camera.main.transform.position = new Vector3(0,0, -levelSize * 1.9f);
     }
 
     private void OnCubeClicked(CubeBehaviour cubeBehaviour)
