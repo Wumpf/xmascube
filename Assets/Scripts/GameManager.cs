@@ -94,7 +94,7 @@ public class GameManager : MonoBehaviour
                     GameObject gameObject = (GameObject)GameObject.Instantiate(CubePrefab, Vector3.zero, Quaternion.identity);
                     _level[x, y, z] = gameObject.GetComponent<CubeBehaviour>();
                     _level[x, y, z].OnClicked += OnCubeClicked;
-                    _level[x, y, z].Position = new Vector3(x, y, z);
+                    _level[x, y, z].GridPosition = new Vector3(x, y, z);
                     _level[x, y, z].TypeIndex = levelDesc[x, y, z];
 
                     if (_cubeTextures.Length <= levelDesc[x, y, z])
@@ -110,6 +110,10 @@ public class GameManager : MonoBehaviour
 
     private void OnCubeClicked(CubeBehaviour cubeBehaviour)
     {
+        // Shouldn't happen, but just to be sure...
+        if (!cubeBehaviour.Active)
+            return;
+
         // Don't select the middle object.
         if(cubeBehaviour.TypeIndex == 0)
         {
@@ -117,33 +121,45 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            // TODO: Check if removable
-            //List<Vector3> neighbors = _puzzleBuilder.GetNeighbors(cubeBehaviour.GridPosition);
-
-            if (_selectedObject == null)
+            // Check if removable
+            uint numNeighbors = 0;
+            List<Vector3> neighbors = _puzzleBuilder.GetNeighbors(cubeBehaviour.GridPosition);
+            foreach(var pos in neighbors)
             {
-                _selectedObject = cubeBehaviour;
-                _selectedObject.Select();
+                if (_level[(int)pos.x, (int)pos.y, (int)pos.z].Active)
+                    ++numNeighbors;
             }
-            else if (cubeBehaviour == _selectedObject)
+            if (numNeighbors >= 5)
             {
-                _selectedObject.Unselect();
-                _selectedObject = null;
+                // TODO: Not possible sound event.
             }
             else
             {
-                if (cubeBehaviour.TypeIndex != _selectedObject.TypeIndex)
+                if (_selectedObject == null)
                 {
-                    // TODO: Not possible sound event.
+                    _selectedObject = cubeBehaviour;
+                    _selectedObject.Select();
+                }
+                else if (cubeBehaviour == _selectedObject)
+                {
+                    _selectedObject.Unselect();
+                    _selectedObject = null;
                 }
                 else
                 {
-                    Turn newTurn = new Turn(_selectedObject, cubeBehaviour);
-                    newTurn.Do();
-                    _turns.Push(newTurn);
-                    _selectedObject = null;
+                    if (cubeBehaviour.TypeIndex != _selectedObject.TypeIndex)
+                    {
+                        // TODO: Not possible sound event.
+                    }
+                    else
+                    {
+                        Turn newTurn = new Turn(_selectedObject, cubeBehaviour);
+                        newTurn.Do();
+                        _turns.Push(newTurn);
+                        _selectedObject = null;
 
-                    // TODO: Check win condition.
+                        // TODO: Check win condition.
+                    }
                 }
             }
         }
