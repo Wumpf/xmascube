@@ -87,7 +87,7 @@ public class GameManager : MonoBehaviour
         if (_level != null)
         {
             foreach (var obj in _level)
-                GameObject.Destroy(obj);
+                GameObject.Destroy(obj.gameObject);
         }
         _selectedObject = null;
         _turns.Clear();
@@ -97,6 +97,8 @@ public class GameManager : MonoBehaviour
 
         // Generate new level
         int levelSize = 1 + (roundIndex+1) * 2;
+        if (levelSize > 7)
+            levelSize = 7;
         _level = new CubeBehaviour[levelSize, levelSize, levelSize];
         _puzzleBuilder = new PuzzleBuilder();
         List<int> tileIdentifier = new List<int>();
@@ -133,7 +135,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        float scale = 1.0f / (levelSize / 2);
+        float scale = 1.1f / Mathf.Sqrt(levelSize / 2);
         CubeParentObject.transform.localScale = new Vector3(scale, scale,scale);
         MiddleObject.transform.localScale = new Vector3(0.15f * scale, 0.15f * scale, 0.15f * scale);
 
