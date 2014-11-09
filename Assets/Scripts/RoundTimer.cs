@@ -11,7 +11,6 @@ public class RoundTimer : MonoBehaviour {
 
     private List<float> _penaltyMessages = new List<float>();
     private const float _penaltyMessageSpeed = 0.5f;
-    private readonly string _penaltyMessageText;
     const float _penaltyMessageStartHeight = 40.0f;
     const float _penaltyMessageEndHeight = -20.0f;
 
@@ -22,40 +21,43 @@ public class RoundTimer : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        if(!GetComponent<GameManager>().Winning)
+        if (GetComponent<GameManager>().CurrentState == GameManager.State.INGAME)
             RoundTime += Time.deltaTime;
     }
 
     void OnGUI()
     {
-        GUI.skin = Skin;
-
-        int minutes = (int)(RoundTime / 60.0f);
-        int seconds = (int)(RoundTime) - minutes * 60;
-        string timerText = "Time " + (minutes < 10 ? "0" : "") + minutes + (seconds < 10 ? ":0" : ":") + seconds;
-        var style = GUI.skin.FindStyle("timer");
-        style.CalcFontSize(new GUIContent(timerText), 300, 70, 50, 10);
-        GUI.Label(new Rect(20, 20, 300, 70), timerText, style);
-
-        Vector2 penaltyMessageOffset = style.CalcSize(new GUIContent("Time 00"));
-        string penaltyMessageText = "+" + (int)UndoTimePenalty;
-
-        style = GUI.skin.FindStyle("penalty");
-        style.CalcFontSize(new GUIContent(_penaltyMessageText), 200, 60, 50, 20);
-        for(int i=0; i<_penaltyMessages.Count; ++i)
+        if (GetComponent<GameManager>().CurrentState == GameManager.State.INGAME || GetComponent<GameManager>().CurrentState == GameManager.State.WINNING)
         {
-            _penaltyMessages[i] += Time.deltaTime * _penaltyMessageSpeed;
-            if (_penaltyMessages[i] > 1)
+            GUI.skin = Skin;
+
+            int minutes = (int)(RoundTime / 60.0f);
+            int seconds = (int)(RoundTime) - minutes * 60;
+            string timerText = "Time " + (minutes < 10 ? "0" : "") + minutes + (seconds < 10 ? ":0" : ":") + seconds;
+            var style = GUI.skin.FindStyle("timer");
+            style.CalcFontSize(new GUIContent(timerText), 300, 70, 50, 10);
+            GUI.Label(new Rect(20, 20, 300, 70), timerText, style);
+
+            Vector2 penaltyMessageOffset = style.CalcSize(new GUIContent("Time 00"));
+            string penaltyMessageText = "+" + (int)UndoTimePenalty;
+
+            style = GUI.skin.FindStyle("penalty");
+            style.CalcFontSize(new GUIContent(penaltyMessageText), 200, 60, 50, 20);
+            for (int i = 0; i < _penaltyMessages.Count; ++i)
             {
-                _penaltyMessages.RemoveAt(i);
-                --i; continue;
+                _penaltyMessages[i] += Time.deltaTime * _penaltyMessageSpeed;
+                if (_penaltyMessages[i] > 1)
+                {
+                    _penaltyMessages.RemoveAt(i);
+                    --i; continue;
+                }
+
+                float height = Mathf.Lerp(_penaltyMessageStartHeight, _penaltyMessageEndHeight, _penaltyMessages[i]);
+
+                GUI.color = new Color(1.0f, 1.0f, 1.0f, Mathf.Clamp01(Mathf.Sin(_penaltyMessages[i] * Mathf.PI * 1.2f)));
+                GUI.Label(new Rect(penaltyMessageOffset.x, height, 200, 60), penaltyMessageText, style);
+                GUI.color = Color.white;
             }
-
-            float height = Mathf.Lerp(_penaltyMessageStartHeight, _penaltyMessageEndHeight, _penaltyMessages[i]);
-
-            GUI.color = new Color(1.0f, 1.0f, 1.0f, Mathf.Clamp01(Mathf.Sin(_penaltyMessages[i] * Mathf.PI * 1.2f)));
-            GUI.Label(new Rect(penaltyMessageOffset.x, height, 200, 60), penaltyMessageText, style);
-            GUI.color = Color.white;
         }
     }
 
