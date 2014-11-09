@@ -12,6 +12,7 @@ public class CubeBehaviour : MonoBehaviour {
 
 	private Vector3 _pos = Vector3.zero;
 
+	private bool selected = false;
 	// Use this for initialization
 	public void Start() 
 	{
@@ -50,11 +51,14 @@ public class CubeBehaviour : MonoBehaviour {
 	public void Select()
 	{
 		renderer.material.shader = Shader.Find("Self-Illumin/Parallax Diffuse");
+		selected = true;
+		StartCoroutine("ChangeSizeCoroutine");
 	}
 
 	public void Unselect()
 	{
 		renderer.material.shader = Shader.Find("Diffuse");
+		selected = false;
 	}
 
 	public void Disappear()
@@ -65,6 +69,7 @@ public class CubeBehaviour : MonoBehaviour {
 		{
 			audio.PlayOneShot(DisappearSound,0.5f);
 		}
+		selected = false;
 		StartCoroutine("DisappearCoroutine");
 	}
 
@@ -112,6 +117,24 @@ public class CubeBehaviour : MonoBehaviour {
             this.transform.localScale += new Vector3(waitAppearSpeed, waitAppearSpeed, waitAppearSpeed);
 			yield return new WaitForEndOfFrame();
 		}
-        this.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+		this.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+	}
+
+	private IEnumerator ChangeSizeCoroutine() 
+	{
+		float waitAppearSpeed = Time.deltaTime * 0.05f;
+		while(selected)
+		{
+			if( (Time.timeSinceLevelLoad)%2 <1 )
+			{
+				this.transform.localScale += new Vector3(waitAppearSpeed, waitAppearSpeed, waitAppearSpeed);
+			}
+			else
+			{
+				this.transform.localScale -= new Vector3(waitAppearSpeed, waitAppearSpeed, waitAppearSpeed);
+			}
+			yield return new WaitForEndOfFrame();
+		}
+		this.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
 	}
 }
