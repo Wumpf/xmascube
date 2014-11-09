@@ -15,6 +15,7 @@ public class CubeBehaviour : MonoBehaviour {
 	// Use this for initialization
 	public void Start() 
 	{
+        Active = true;
 	}
 
 	public void Update()
@@ -35,7 +36,7 @@ public class CubeBehaviour : MonoBehaviour {
 		}
 	}
 
-	public Vector3 Position 
+	public Vector3 GridPosition 
 	{
         set
         {
@@ -46,6 +47,8 @@ public class CubeBehaviour : MonoBehaviour {
 	}
 
     public int TypeIndex { get; set; }
+
+    public bool Active { get; private set; }
 	
 
 	public void Select()
@@ -60,6 +63,7 @@ public class CubeBehaviour : MonoBehaviour {
 
 	public void Disappear()
 	{
+        Active = false;
 		Unselect();
 		if(DisappearSound != null)
 		{
@@ -70,6 +74,7 @@ public class CubeBehaviour : MonoBehaviour {
 
 	public void Reappear()
 	{
+        Active = true;
 		if(ReappearSound != null)
 		{
 			audio.PlayOneShot(ReappearSound,50);
@@ -83,10 +88,12 @@ public class CubeBehaviour : MonoBehaviour {
 
 		while(this.transform.localScale.x >= 0 || audio.isPlaying)
 		{
-			this.transform.localScale -= new Vector3(0.1f,0.1f, 0.1f);
+            float waitAppearSpeed = Time.deltaTime * 6;
+            this.transform.localScale -= new Vector3(waitAppearSpeed, waitAppearSpeed, waitAppearSpeed);
 			yield return new WaitForEndOfFrame();
 		}
-		this.gameObject.SetActive(false);	
+        this.transform.localScale = new Vector3(0.0f, 0.0f, 0.0f);
+        this.gameObject.SetActive(false);
 	}
 
 	private IEnumerator ReappearCoroutine() 
@@ -96,10 +103,12 @@ public class CubeBehaviour : MonoBehaviour {
 			this.gameObject.SetActive(true);
 		}
 
-		while(this.transform.localScale.x <= 1)
+		while(this.transform.localScale.x < 1)
 		{
-			this.transform.localScale += new Vector3(0.1f,0.1f, 0.1f);
+            float waitAppearSpeed = Time.deltaTime * 6;
+            this.transform.localScale += new Vector3(waitAppearSpeed, waitAppearSpeed, waitAppearSpeed);
 			yield return new WaitForEndOfFrame();
 		}
+        this.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
 	}
 }
