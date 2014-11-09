@@ -50,16 +50,16 @@ public class CubeBehaviour : MonoBehaviour {
 
 	public void Select()
 	{
-		//renderer.material.shader = Shader.Find("Self-Illumin/Parallax Diffuse");
-		renderer.material.color = Color.yellow;
+		renderer.material.shader = Shader.Find("Self-Illumin/Parallax Diffuse");
+		//renderer.material.color = Color.yellow;
 		selected = true;
 		StartCoroutine("ChangeSizeCoroutine");
 	}
 
 	public void Unselect()
 	{
-		//renderer.material.shader = Shader.Find("Diffuse");
-		renderer.material.color = Color.white;
+		renderer.material.shader = Shader.Find("Diffuse");
+		//renderer.material.color = Color.white;
 		selected = false;
 	}
 
