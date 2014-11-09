@@ -91,6 +91,7 @@ public class GameManager : MonoBehaviour
         _level = new CubeBehaviour[levelSize, levelSize, levelSize];
         _puzzleBuilder = new PuzzleBuilder();
         List<int> tileIdentifier = new List<int>();
+
         tileIdentifier.AddRange(new int[] { 1, 2, 3, 4, 5 });
         int[, ,] levelDesc = _puzzleBuilder.GenerateLevel(levelSize, tileIdentifier);
 
@@ -120,6 +121,8 @@ public class GameManager : MonoBehaviour
             }
         }
         Camera.main.transform.position = new Vector3(0,0, -levelSize * 1.9f);
+
+        CubeParentObject.GetComponent<CubeRotator>().Reset();
     }
 
     private void OnCubeClicked(CubeBehaviour cubeBehaviour)

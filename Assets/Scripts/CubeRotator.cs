@@ -19,12 +19,10 @@ public class CubeRotator : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
     {
-        _rotationGoal = transform.rotation;
-
-        UpButton.ButtonClickedEvent += () => _rotationGoal = Quaternion.Euler(new Vector3(_rotationSteps, 0.0f, 0.0f)) * _rotationGoal;
-        DownButton.ButtonClickedEvent += () => _rotationGoal = Quaternion.Euler(new Vector3(-_rotationSteps, 0.0f, 0.0f)) * _rotationGoal;
-        RightButton.ButtonClickedEvent += () => _rotationGoal = Quaternion.Euler(new Vector3(0.0f, -_rotationSteps, 0.0f)) * _rotationGoal;
-        LeftButton.ButtonClickedEvent += () => _rotationGoal = Quaternion.Euler(new Vector3(0.0f, _rotationSteps, 0.0f)) * _rotationGoal;
+        UpButton.ButtonClickedEvent += () => _rotationGoal = Quaternion.Euler(_rotationSteps, 0.0f, 0.0f) * _rotationGoal;
+        DownButton.ButtonClickedEvent += () => _rotationGoal = Quaternion.Euler(-_rotationSteps, 0.0f, 0.0f) * _rotationGoal;
+        RightButton.ButtonClickedEvent += () => _rotationGoal = Quaternion.Euler(0.0f, -_rotationSteps, 0.0f) * _rotationGoal;
+        LeftButton.ButtonClickedEvent += () => _rotationGoal = Quaternion.Euler(0.0f, _rotationSteps, 0.0f) * _rotationGoal;
 
         _resizeWatcher.ResizeEvent += (int width, int height) =>
         {
@@ -43,6 +41,12 @@ public class CubeRotator : MonoBehaviour {
         };
 
         StartCoroutine(_resizeWatcher.CheckForResize());
+    }
+
+    public void Reset()
+    {
+        transform.rotation = Quaternion.Euler(30.0f, 30.0f, 0.0f);
+        _rotationGoal = transform.rotation;
     }
 
     void OnDestroy()
