@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
     public FancyButtonScript UndoButton;
     public GameObject CubePrefab;
     public GameObject CubeParentObject;
+    public GameObject MiddleObject;
+    public bool Winning = false;
 
     private class Turn
     {
@@ -46,6 +48,7 @@ public class GameManager : MonoBehaviour
     private RoundTimer _roundTimer;
     private Texture[] _cubeTextures;
     private Quaternion _mainCameraRotationDest;
+    private int _currentRoundIndex = 0;
 
     private WindowResizeWatcher _resizeWatcher = new WindowResizeWatcher();
 
@@ -58,7 +61,7 @@ public class GameManager : MonoBehaviour
         _cubeTextures = Resources.LoadAll<Texture>("Textures");
         _cubeTextures.OrderBy(tex => tex.name);
 
-        StartRound(0);
+        StartRound(_currentRoundIndex);
 
         // Undo button.
         UndoButton.ButtonClickedEvent += OnUndoButtonClicked;
@@ -85,9 +88,10 @@ public class GameManager : MonoBehaviour
         _turns.Clear();
         Score = 0;
         _roundTimer.Reset();
+        Winning = true;
 
         // Generate new level
-        int levelSize = 3 + roundIndex * 2;
+        int levelSize = 1 + (roundIndex+1) * 2;
         _level = new CubeBehaviour[levelSize, levelSize, levelSize];
         _puzzleBuilder = new PuzzleBuilder();
         List<int> tileIdentifier = new List<int>();
@@ -123,17 +127,17 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
-        Camera.main.transform.position = new Vector3(0,0, -levelSize * 2.3f);
+
+        float scale = 1.0f / (levelSize / 2);
+        CubeParentObject.transform.localScale = new Vector3(scale, scale,scale);
+        MiddleObject.transform.localScale = new Vector3(0.15f * scale, 0.15f * scale, 0.15f * scale);
 
         CubeParentObject.GetComponent<CubeRotator>().Reset();
+        _currentRoundIndex = roundIndex;
     }
 
     private void OnCubeClicked(CubeBehaviour cubeBehaviour)
     {
-        // Shouldn't happen, but just to be sure...
-        if (!cubeBehaviour.Active)
-            return;
-
         // Don't select the middle object.
         if(cubeBehaviour.TypeIndex == 0)
         {
@@ -179,11 +183,55 @@ public class GameManager : MonoBehaviour
                         _turns.Push(newTurn);
                         _selectedObject = null;
 
-                        // TODO: Check win condition.
+                        CheckWin();
                     }
                 }
             }
         }
+    }
+
+    private void CheckWin()
+    {
+        Winning = true;
+        foreach(var cube in _level)
+        {
+            if (cube != null && cube.Active)
+            {
+                Winning = false;
+                break;
+            }
+        }
+        if (Winning)
+            StartCoroutine(WinningAnimations());
+    }
+
+    private IEnumerator WinningAnimations()
+    {
+        float winningAnimationStartTime = Time.timeSinceLevelLoad;
+
+        var oldScale = MiddleObject.transform.localScale;
+        var oldRotation = MiddleObject.transform.rotation;
+
+        const float animationLength = 6.0f;
+
+        GUICamera.enabled = false;
+        
+        float animationTime = 0.0f;
+        do
+        {
+            animationTime = Time.timeSinceLevelLoad - winningAnimationStartTime;
+            MiddleObject.transform.Rotate(0, Time.deltaTime * 60.0f, 0.0f);
+            float scale = (Mathf.Clamp01(animationTime * 0.5f) * 3.0f + 1.0f) * oldScale.magnitude;
+            MiddleObject.transform.localScale = new Vector3(scale, scale, scale);
+
+            yield return new WaitForEndOfFrame();
+        } while (animationTime < animationLength);
+
+        GUICamera.enabled = true;
+
+        MiddleObject.transform.localScale = oldScale;
+        MiddleObject.transform.rotation = oldRotation;
+        StartRound(_currentRoundIndex + 1);
     }
 
     private void OnUndoButtonClicked()

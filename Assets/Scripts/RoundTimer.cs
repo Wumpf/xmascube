@@ -22,7 +22,8 @@ public class RoundTimer : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        RoundTime += Time.deltaTime;
+        if(!GetComponent<GameManager>().Winning)
+            RoundTime += Time.deltaTime;
     }
 
     void OnGUI()
