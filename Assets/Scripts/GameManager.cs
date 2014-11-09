@@ -87,13 +87,19 @@ public class GameManager : MonoBehaviour
         if (_level != null)
         {
             foreach (var obj in _level)
-                GameObject.Destroy(obj.gameObject);
+            {
+                if(obj != null)
+                    GameObject.Destroy(obj.gameObject);
+            }
         }
         _selectedObject = null;
         _turns.Clear();
         Score = 0;
         _roundTimer.Reset();
         Winning = false;
+        CubeParentObject.gameObject.transform.rotation = Quaternion.identity;
+        CubeParentObject.gameObject.transform.localScale = Vector3.one;
+        
 
         // Generate new level
         int levelSize = 1 + (roundIndex+1) * 2;
@@ -119,6 +125,7 @@ public class GameManager : MonoBehaviour
                     gameObject.transform.parent = CubeParentObject.transform;
                     gameObject.transform.position = Vector3.Scale(new Vector3(x - levelSize / 2, y - levelSize / 2, z - levelSize / 2),
                                                                   gameObject.transform.renderer.bounds.size);
+                    gameObject.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
 
                     _level[x, y, z] = gameObject.GetComponent<CubeBehaviour>();
                     _level[x, y, z].OnClicked += OnCubeClicked;
@@ -138,8 +145,8 @@ public class GameManager : MonoBehaviour
         float scale = 1.1f / Mathf.Sqrt(levelSize / 2);
         CubeParentObject.transform.localScale = new Vector3(scale, scale,scale);
         MiddleObject.transform.localScale = new Vector3(0.15f * scale, 0.15f * scale, 0.15f * scale);
-
         CubeParentObject.GetComponent<CubeRotator>().Reset();
+
         _currentRoundIndex = roundIndex;
     }
 
