@@ -84,11 +84,16 @@ public class GameManager : MonoBehaviour
     private void StartRound(int roundIndex)
     {
         // Reset round properties
+        if (_level != null)
+        {
+            foreach (var obj in _level)
+                GameObject.Destroy(obj);
+        }
         _selectedObject = null;
         _turns.Clear();
         Score = 0;
         _roundTimer.Reset();
-        Winning = true;
+        Winning = false;
 
         // Generate new level
         int levelSize = 1 + (roundIndex+1) * 2;
@@ -141,7 +146,7 @@ public class GameManager : MonoBehaviour
         // Don't select the middle object.
         if(cubeBehaviour.TypeIndex == 0)
         {
-            // TODO: Not possible sound event.
+            cubeBehaviour.Fail();
         }
         else
         {
@@ -151,12 +156,12 @@ public class GameManager : MonoBehaviour
             foreach(var pos in neighbors)
             {
                 CubeBehaviour cube = _level[(int)pos.x, (int)pos.y, (int)pos.z];
-                if (cube != null && cube.Active)
+                if (cube == null || cube.Active)
                     ++numNeighbors;
             }
             if (numNeighbors >= 5)
             {
-                // TODO: Not possible sound event.
+                cubeBehaviour.Fail();
             }
             else
             {
@@ -174,7 +179,7 @@ public class GameManager : MonoBehaviour
                 {
                     if (cubeBehaviour.TypeIndex != _selectedObject.TypeIndex)
                     {
-                        // TODO: Not possible sound event.
+                        cubeBehaviour.Fail();
                     }
                     else
                     {
