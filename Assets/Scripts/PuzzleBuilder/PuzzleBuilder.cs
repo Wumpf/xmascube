@@ -62,6 +62,8 @@ public class PuzzleBuilder
         }
         if(_numberOfTiles * 2 != _numberOfAvialablePairs.Values.Sum())
             Debug.Log(string.Format("Wrong number of tiles {0} {1}", numberOfTiles, _numberOfAvialablePairs.Values.Sum()));
+
+        _numberOfAvialablePairs = _numberOfAvialablePairs.Where(kv => kv.Value > 0).ToDictionary<KeyValuePair<int,int>,int,int>(kv => kv.Key, kv => kv.Value);
     }
 
 
