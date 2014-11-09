@@ -13,8 +13,16 @@ public class GameManager : MonoBehaviour
     public GameObject CubePrefab;
     public GameObject CubeParentObject;
     public GameObject MiddleObject;
-    public bool Winning = false;
     public BgmScript BgmMusic;
+
+    public enum State
+    {
+        MAINMENU,
+        CREDITS,
+        INGAME,
+        WINNING
+    };
+    public State CurrentState = State.MAINMENU;
 
     private class Turn
     {
@@ -62,7 +70,8 @@ public class GameManager : MonoBehaviour
         _cubeTextures = Resources.LoadAll<Texture>("Textures");
         _cubeTextures.OrderBy(tex => tex.name);
 
-        StartRound(_currentRoundIndex);
+        GUICamera.enabled = false;
+        //StartRound(_currentRoundIndex);
 
         // Undo button.
         UndoButton.ButtonClickedEvent += OnUndoButtonClicked;
@@ -82,6 +91,28 @@ public class GameManager : MonoBehaviour
         _resizeWatcher.Dispose();
     }
 
+    void OnGUI()
+    {
+        if(CurrentState == State.MAINMENU)
+        {
+            if (GUI.Button(new Rect(Screen.width / 2 - 75, Screen.height / 2 - 100, 150, 50), "Start Game"))
+            {
+                StartRound(0);
+            }
+            if (GUI.Button(new Rect(Screen.width / 2 - 75, Screen.height / 2, 150, 50), "Credits"))
+            {
+                CurrentState = State.CREDITS;
+            }
+        }
+        else if(CurrentState == State.CREDITS)
+        {
+            if (GUI.Button(new Rect(Screen.width - 200, Screen.height - 100, 150, 50), "Back"))
+            {
+                CurrentState = State.MAINMENU;
+            }
+        }
+    }
+
     private void StartRound(int roundIndex)
     {
         // Reset round properties
@@ -97,7 +128,8 @@ public class GameManager : MonoBehaviour
         _turns.Clear();
         Score = 0;
         _roundTimer.Reset();
-        Winning = false;
+        CurrentState = State.INGAME;
+        GUICamera.enabled = true;
         CubeParentObject.gameObject.transform.rotation = Quaternion.identity;
         CubeParentObject.gameObject.transform.localScale = Vector3.one;
         
@@ -208,17 +240,19 @@ public class GameManager : MonoBehaviour
 
     private void CheckWin()
     {
-        Winning = true;
+        bool winning = true;
         foreach(var cube in _level)
         {
             if (cube != null && cube.Active)
             {
-                Winning = false;
+                winning = false;
                 break;
             }
         }
-        if (Winning)
+
+        if (winning)
         {
+            CurrentState = State.WINNING;
             BgmMusic.PlayBgmLevelClear(true);
             StartCoroutine(WinningAnimations());
         }
