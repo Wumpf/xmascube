@@ -3701,8 +3701,8 @@ MonoBehaviour:
   CubePrefab: {fileID: 100000, guid: d554d2f7acdb1894e9349d957261a650, type: 2}
   CubeParentObject: {fileID: 177799864}
   MiddleObject: {fileID: 1697430493}
-  Winning: 0
   BgmMusic: {fileID: 1571777591}
+  CurrentState: 0
 --- !u!4 &1902648044
 Transform:
   m_ObjectHideFlags: 0

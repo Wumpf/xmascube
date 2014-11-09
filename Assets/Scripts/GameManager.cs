@@ -60,6 +60,7 @@ public class GameManager : MonoBehaviour
     private int _currentRoundIndex = 0;
 
     private WindowResizeWatcher _resizeWatcher = new WindowResizeWatcher();
+    private Vector2 creditsScrollPosition = Vector2.zero;
 
     // Use this for initialization
     void Start()
@@ -106,6 +107,12 @@ public class GameManager : MonoBehaviour
         }
         else if(CurrentState == State.CREDITS)
         {
+            var content = new GUIContent("Game by:\nEnrico\nXenja\nAndreas\n\nAdditional materials:\nMusic:\n\nFour Winter by pheonton\nfound on\nhttp://opengameart.org/content/four-winter\n\nUI Sounds by  StumpyStrust\nfound on\nhttp://opengameart.org/content/ui-sounds\n\nPlatform small Sound Effect pack by RaoulWB\nfound on\nhttp://opengameart.org/content/platform-small-sound-effect-pack\n\nLively Meadow (Victory Fanfare and Song) by matthew.pablo\nfound on\nhttp://opengameart.org/content/lively-meadow-victory-fanfare-and-song\n\n\nIcons:\nhttp://www.iconarchive.com/show/oxygen-icons-by-oxygen-icons.org.1.html");
+
+            creditsScrollPosition = GUI.BeginScrollView(new Rect(Screen.width/2 - 150, Screen.height/2 - 100, 300, 200), creditsScrollPosition, new Rect(Screen.width/2 - 140, Screen.height/2 - 250, 400, 500));
+            GUI.Label(new Rect(Screen.width/2 - 140, Screen.height/2 - 250, 400, 500), content, GUI.skin.textField );
+            GUI.EndScrollView();
+
             if (GUI.Button(new Rect(Screen.width - 200, Screen.height - 100, 150, 50), "Back"))
             {
                 CurrentState = State.MAINMENU;
