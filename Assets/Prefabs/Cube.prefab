@@ -140,9 +140,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15a9629b4ba1e3f4fb0ac4773d2db5b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FailSound: {fileID: 8300000, guid: 32e9125332578954c984b53209d550d1, type: 3}
-  DisappearSound: {fileID: 8300000, guid: 32e9125332578954c984b53209d550d1, type: 3}
-  ReappearSound: {fileID: 8300000, guid: 32e9125332578954c984b53209d550d1, type: 3}
+  FailSound: {fileID: 8300000, guid: 0bc8965e612ce9e49b6535205f42489c, type: 3}
+  DisappearSound: {fileID: 8300000, guid: 427590ff4762b3f41b6469e1a13e9a5b, type: 3}
+  ReappearSound: {fileID: 8300000, guid: 289bb7eeeba265b44b31f8fb89fb6c99, type: 3}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

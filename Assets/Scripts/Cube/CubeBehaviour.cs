@@ -63,7 +63,7 @@ public class CubeBehaviour : MonoBehaviour {
 		Unselect();
 		if(DisappearSound != null)
 		{
-			audio.PlayOneShot(DisappearSound);
+			audio.PlayOneShot(DisappearSound,0.5f);
 		}
 		StartCoroutine("DisappearCoroutine");
 	}
@@ -73,7 +73,7 @@ public class CubeBehaviour : MonoBehaviour {
         Active = true;
 		if(ReappearSound != null)
 		{
-			audio.PlayOneShot(ReappearSound);
+			audio.PlayOneShot(ReappearSound, 2);
 		}
 		StartCoroutine("ReappearCoroutine");
 	}
