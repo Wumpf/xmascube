@@ -92,7 +92,7 @@ public class GameManager : MonoBehaviour
         _puzzleBuilder = new PuzzleBuilder();
         List<int> tileIdentifier = new List<int>();
 
-        tileIdentifier.AddRange(new int[] { 1, 2, 3, 4, 5 });
+        tileIdentifier.AddRange(Enumerable.Range(1, _cubeTextures.Length));
         int[, ,] levelDesc = _puzzleBuilder.GenerateLevel(levelSize, tileIdentifier);
 
         for (int x = 0; x < levelSize; ++x)
@@ -101,6 +101,9 @@ public class GameManager : MonoBehaviour
             {
                 for (int z = 0; z < levelSize; ++z)
                 {
+                    if (levelDesc[x, y, z] == 0)
+                        continue;
+
                     GameObject gameObject = (GameObject)GameObject.Instantiate(CubePrefab, Vector3.zero, Quaternion.identity);
                     gameObject.transform.parent = CubeParentObject.transform;
                     gameObject.transform.position = Vector3.Scale(new Vector3(x - levelSize / 2, y - levelSize / 2, z - levelSize / 2),
@@ -111,16 +114,16 @@ public class GameManager : MonoBehaviour
                     _level[x, y, z].GridPosition = new Vector3(x, y, z);
                     _level[x, y, z].TypeIndex = levelDesc[x, y, z];
 
-                    if (_cubeTextures.Length <= levelDesc[x, y, z])
+                    if (_cubeTextures.Length < levelDesc[x, y, z])
                     {
                         Debug.LogError("Not enough cube textures!");
                         continue;
                     }
-                    ((MeshRenderer)_level[x, y, z].renderer).material.mainTexture = _cubeTextures[levelDesc[x, y, z]];
+                    ((MeshRenderer)_level[x, y, z].renderer).material.mainTexture = _cubeTextures[levelDesc[x, y, z] - 1];
                 }
             }
         }
-        Camera.main.transform.position = new Vector3(0,0, -levelSize * 1.9f);
+        Camera.main.transform.position = new Vector3(0,0, -levelSize * 2.3f);
 
         CubeParentObject.GetComponent<CubeRotator>().Reset();
     }
@@ -143,7 +146,8 @@ public class GameManager : MonoBehaviour
             List<Vector3> neighbors = _puzzleBuilder.GetNeighbors(cubeBehaviour.GridPosition);
             foreach(var pos in neighbors)
             {
-                if (_level[(int)pos.x, (int)pos.y, (int)pos.z].Active)
+                CubeBehaviour cube = _level[(int)pos.x, (int)pos.y, (int)pos.z];
+                if (cube != null && cube.Active)
                     ++numNeighbors;
             }
             if (numNeighbors >= 5)
