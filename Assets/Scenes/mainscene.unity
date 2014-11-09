@@ -3312,7 +3312,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BgmInGame: {fileID: 8300000, guid: 8f9ee1885cb9f474a80a60e7f3020dab, type: 3}
   BgmLevelClear: {fileID: 8300000, guid: 159b19f4d3a9e6049b63c9c96377d3ae, type: 3}
-  BgmMenu: {fileID: 0}
+  BgmMenu: {fileID: 8300000, guid: 8f9ee1885cb9f474a80a60e7f3020dab, type: 3}
   AudioSourceBgm: {fileID: 1571777590}
 --- !u!1 &1572850326
 GameObject:
