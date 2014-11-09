@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     public GameObject CubeParentObject;
     public GameObject MiddleObject;
     public bool Winning = false;
+    public BgmScript BgmMusic;
 
     private class Turn
     {
@@ -141,6 +142,7 @@ public class GameManager : MonoBehaviour
 
         CubeParentObject.GetComponent<CubeRotator>().Reset();
         _currentRoundIndex = roundIndex;
+        BgmMusic.PlayBgmInGame(true);
     }
 
     private void OnCubeClicked(CubeBehaviour cubeBehaviour)
@@ -209,7 +211,10 @@ public class GameManager : MonoBehaviour
             }
         }
         if (Winning)
+        {
+            BgmMusic.PlayBgmLevelClear(true);
             StartCoroutine(WinningAnimations());
+        }
     }
 
     private IEnumerator WinningAnimations()

@@ -2439,6 +2439,64 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: ce0005b973a047846b2dcaa9c706f437, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!1 &810368620
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 100066, guid: 6f108ee07c60cbc4294d4ced542df0ec, type: 2}
+  m_PrefabInternal: {fileID: 365208187}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 810368621}
+  - 33: {fileID: 810368623}
+  - 23: {fileID: 810368622}
+  m_Layer: 0
+  m_Name: default
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &810368621
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 400066, guid: 6f108ee07c60cbc4294d4ced542df0ec, type: 2}
+  m_PrefabInternal: {fileID: 365208187}
+  m_GameObject: {fileID: 810368620}
+  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 24.7858639, y: 7.66369486, z: -9.1358379e-07}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1189118488}
+  m_RootOrder: 0
+--- !u!23 &810368622
+Renderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 2300030, guid: 6f108ee07c60cbc4294d4ced542df0ec,
+    type: 2}
+  m_PrefabInternal: {fileID: 365208187}
+  m_GameObject: {fileID: 810368620}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_LightmapIndex: 255
+  m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
+  m_Materials:
+  - {fileID: 2100000, guid: 7662f7affd3f7a5469d67cf5d9dd7e77, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 0
+  m_LightProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!33 &810368623
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 3300032, guid: 6f108ee07c60cbc4294d4ced542df0ec,
+    type: 2}
+  m_PrefabInternal: {fileID: 365208187}
+  m_GameObject: {fileID: 810368620}
+  m_Mesh: {fileID: 4300000, guid: 887645d052e12b8439123d30051b78f0, type: 3}
 --- !u!1 &935311769
 GameObject:
   m_ObjectHideFlags: 0
@@ -2619,6 +2677,34 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4
+--- !u!1 &1189118487
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 100068, guid: 6f108ee07c60cbc4294d4ced542df0ec, type: 2}
+  m_PrefabInternal: {fileID: 365208187}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1189118488}
+  m_Layer: 0
+  m_Name: Painting
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1189118488
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 400068, guid: 6f108ee07c60cbc4294d4ced542df0ec, type: 2}
+  m_PrefabInternal: {fileID: 365208187}
+  m_GameObject: {fileID: 1189118487}
+  m_LocalRotation: {x: 3.09086232e-08, y: .707106829, z: .707106829, w: -3.09086232e-08}
+  m_LocalPosition: {x: 15.6983356, y: 45.501194, z: 46.2325745}
+  m_LocalScale: {x: 2, y: 1, z: 2}
+  m_Children:
+  - {fileID: 810368621}
+  m_Father: {fileID: 1571777589}
+  m_RootOrder: 14
 --- !u!1 &1273225505
 GameObject:
   m_ObjectHideFlags: 0
@@ -3119,6 +3205,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1571777589}
   - 82: {fileID: 1571777590}
+  - 114: {fileID: 1571777591}
   m_Layer: 0
   m_Name: Medieval_House
   m_TagString: Untagged
@@ -3150,6 +3237,7 @@ Transform:
   - {fileID: 1734270356}
   - {fileID: 1819943421}
   - {fileID: 2040774457}
+  - {fileID: 1189118488}
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!82 &1571777590
@@ -3211,6 +3299,21 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
+--- !u!114 &1571777591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1571777588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bfe475a437197d49b8ef9f153e80131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BgmInGame: {fileID: 8300000, guid: 8f9ee1885cb9f474a80a60e7f3020dab, type: 3}
+  BgmLevelClear: {fileID: 8300000, guid: 159b19f4d3a9e6049b63c9c96377d3ae, type: 3}
+  BgmMenu: {fileID: 0}
+  AudioSourceBgm: {fileID: 1571777590}
 --- !u!1 &1572850326
 GameObject:
   m_ObjectHideFlags: 0
@@ -3599,6 +3702,7 @@ MonoBehaviour:
   CubeParentObject: {fileID: 177799864}
   MiddleObject: {fileID: 1697430493}
   Winning: 0
+  BgmMusic: {fileID: 1571777591}
 --- !u!4 &1902648044
 Transform:
   m_ObjectHideFlags: 0
