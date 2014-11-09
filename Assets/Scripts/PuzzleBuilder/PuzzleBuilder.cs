@@ -99,7 +99,8 @@ public class PuzzleBuilder
     private Vector3 getRandomFreePosition(int[,,] field)
     {
         var sort = _freePositions.OrderByDescending(kv => kv.Value);
-        var possiblePos = sort.Where(kv => kv.Value == sort.First().Value).Select<KeyValuePair<Vector3, int>, Vector3>(
+        var target = sort.First().Value;
+        var possiblePos = sort.Where(kv => kv.Value == target).Select<KeyValuePair<Vector3, int>, Vector3>(
             kv => kv.Key ).ToList();
                 
         return possiblePos[Random.Range(0, possiblePos.Count)];
@@ -134,6 +135,41 @@ public class PuzzleBuilder
                     result.Add(tempPos, GetNeighbors(tempPos).Where( n => field[(int)n.x,(int)n.y,(int)n.z] != -1).Count());
                 }
             }
+        return result;
+    }
+
+    #endregion
+
+    #region second version
+
+    private int[,,] generateLevel2()
+    {
+        var result = new int[_size,_size,_size];
+        result.FillAllWithValue(-1);
+        result[_size/2,_size/2,_size/2] = 0;
+        _freePositions = getDictionaryOfFreePositions(result);
+        while(_numberOfAvialablePairs.Any())
+        {
+            var key = _numberOfAvialablePairs.Keys.ToList()[Random.Range(0,_numberOfAvialablePairs.Keys.Count)];
+            var pairs = _numberOfAvialablePairs[key];
+            
+            var pos1 = getRandomFreePosition(result);
+            _freePositions.Remove(pos1);
+            var pos2 = getRandomFreePosition(result);
+            _freePositions.Remove(pos2);
+            
+            result[(int)pos1.x,(int)pos1.y,(int)pos1.z] = key;
+            result[(int)pos2.x,(int)pos2.y,(int)pos2.z] = key;
+            foreach(var pos in GetNeighbors(pos1))
+                if(_freePositions.ContainsKey(pos)) _freePositions[pos] ++;
+            foreach(var pos in GetNeighbors(pos2))
+                if(_freePositions.ContainsKey(pos)) _freePositions[pos] ++;
+            if(--pairs == 0)
+                _numberOfAvialablePairs.Remove(key);
+            else
+                _numberOfAvialablePairs[key] = pairs;
+        }
+        
         return result;
     }
 
