@@ -5,7 +5,7 @@ PlayerSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 3
   AndroidProfiler: 0
-  defaultScreenOrientation: 4
+  defaultScreenOrientation: 2
   targetDevice: 2
   targetGlesGraphics: 1
   targetResolution: 0
@@ -154,13 +154,14 @@ PlayerSettings:
   psp2PackagedResourcesPath: 
   flashStrippingLevel: 2
   spritePackerPolicy: 
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    2: 
   metroPackageName: xmascube
   metroPackageLogo: 
   metroPackageLogo140: 
   metroPackageLogo180: 
   metroPackageLogo240: 
-  metroPackageVersion: 
+  metroPackageVersion: 1.0.0.0
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
@@ -205,7 +206,7 @@ PlayerSettings:
   metroPhoneSplashScreenImage: 
   metroPhoneSplashScreenImage140: 
   metroPhoneSplashScreenImage240: 
-  metroTileShortName: 
+  metroTileShortName: xmascube
   metroCommandLineArgsFile: 
   metroTileShowName: 0
   metroMediumTileShowName: 0
@@ -216,7 +217,20 @@ PlayerSettings:
   metroTileBackgroundColor: {r: 0, g: 0, b: 0, a: 1}
   metroSplashScreenBackgroundColor: {r: 0, g: 0, b: 0, a: 1}
   metroSplashScreenUseBackgroundColor: 0
-  metroCapabilities: {}
+  metroCapabilities:
+    EnterpriseAuthentication: 0
+    InternetClient: 0
+    InternetClientServer: 0
+    Location: 0
+    Microphone: 0
+    MusicLibrary: 0
+    PicturesLibrary: 0
+    PrivateNetworkClientServer: 0
+    Proximity: 0
+    RemovableStorage: 0
+    SharedUserCertificates: 0
+    VideosLibrary: 0
+    WebCam: 0
   metroUnprocessedPlugins: []
   metroCompilationOverrides: 1
   blackberryDeviceAddress: 

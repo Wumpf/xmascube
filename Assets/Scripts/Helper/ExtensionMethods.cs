@@ -105,34 +105,6 @@ public static class ExtensionMethods
 
 	#endregion
 
-	#region string
-
-	/// <summary>
-	/// Generates an MD5 hash for an input string. The formatting will match the output of PHP's md5() function.
-	/// </summary>
-	/// <param name="_input">The string to be converted. Assumed to be UTF8 encoded</param>
-	public static string md5( this string _input )
-	{
-		System.Text.UTF8Encoding ue = new System.Text.UTF8Encoding();
-		byte[] bytes = ue.GetBytes(_input);
-		
-		// encrypt bytes
-		System.Security.Cryptography.MD5CryptoServiceProvider md5 = new System.Security.Cryptography.MD5CryptoServiceProvider();
-		byte[] hashBytes = md5.ComputeHash(bytes);
-		
-		// Convert the encrypted bytes back to a string (base 16)
-		string hashString = "";
-		
-		for (int i = 0; i < hashBytes.Length; i++)
-		{
-			hashString += System.Convert.ToString(hashBytes[i], 16).PadLeft(2, '0');
-		}
-		
-		return hashString.PadLeft(32, '0');
-	}
-
-	#endregion
-
     #region IEnumerable<T>
 
     /// <summary>
