@@ -209,7 +209,7 @@ public class GameManager : MonoBehaviour
                 if (cube == null || cube.Active)
                     ++numNeighbors;
             }
-            if (numNeighbors >= 5)
+            if (numNeighbors >= 4)
             {
                 cubeBehaviour.Fail();
             }

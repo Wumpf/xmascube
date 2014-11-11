@@ -201,7 +201,7 @@ public class PuzzleBuilder
 
     private Vector3 getRandomPossibleMove(int[,,] field, Dictionary<Vector3, int> positionsAndSolidNeighbors)
     {
-        var possibleMoves = positionsAndSolidNeighbors.Where(kv => kv.Value < 5).ToList();
+        var possibleMoves = positionsAndSolidNeighbors.Where(kv => kv.Value < 4).ToList();
         return possibleMoves[Random.Range(0, possibleMoves.Count)].Key;
     }
 
