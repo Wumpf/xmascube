@@ -15,6 +15,8 @@ public class PuzzleBuilder
     private Dictionary<Vector3, int> _freePositions;
     #endregion
 
+    public Vector3 Center { get; private set; }
+
     #region functions
 
     // public
@@ -22,14 +24,62 @@ public class PuzzleBuilder
     {
     }
 
-    public int [ , , ] GenerateLevel(int size, List<int> tileIdentifier)
+    public int [ , , ] GenerateCubeLevel(int size, List<int> tileIdentifier)
     {
         if(size % 2 != 1)
             throw new System.ArgumentException("size has to be odd");
         _size = size;
         _numberOfTiles = size * size * size;
         generateAvialablePairs(tileIdentifier, _numberOfTiles);
-        return generateLevel2();
+        return generateLevel2(emptyField());
+    }
+
+    private int [ , , ] GenerateFormLevel(int lvlIdx, List<int> tileIdentifier)
+    {
+        int [,,] res;
+        switch(lvlIdx)
+        {
+            case 2:
+                _size = 5;
+                res = emptyFieldLevel2();
+                break;
+            case 4:
+                _size = 5;
+                res = emptyFieldLevel4();
+                break;
+            case 5:
+                _size = 7;
+                res = emptyFieldLevel5();
+                break;
+            default:
+                return GenerateCubeLevel(7, tileIdentifier);
+        }
+
+        _numberOfTiles = 0;
+        foreach(var i in res)
+            if(i == -1)++_numberOfTiles;//size * size * size;
+        generateAvialablePairs(tileIdentifier, _numberOfTiles);
+
+        return generateLevel2(res);
+    }
+
+    public int [ , , ] GenerateLevel(int lvlIdx, List<int> tileIdentifier)
+    {
+        switch(lvlIdx)
+        {
+            case 1:
+                return GenerateCubeLevel(3, tileIdentifier);
+            case 2:
+                return GenerateFormLevel(lvlIdx, tileIdentifier);
+            case 3:
+                return GenerateCubeLevel(5, tileIdentifier);
+            case 4:
+            case 5:
+                return GenerateFormLevel(lvlIdx, tileIdentifier);
+            default:
+                return GenerateCubeLevel(7, tileIdentifier);
+        }
+
     }
 
     public List<Vector3> GetNeighbors(Vector3 forPosition)
@@ -144,12 +194,45 @@ public class PuzzleBuilder
 
     #region second version
 
-    private int[,,] generateLevel2()
+    private int[,,] emptyField()
     {
         var result = new int[_size,_size,_size];
         // all fileds are unused
         result.FillAllWithValue(-1);
-        
+        return result;
+    }
+
+    private int[,,] emptyFieldLevel2()
+    {
+        var result = new int[_size,_size,_size];
+        // all fileds are unused
+        result.FillAllWithValue(-1);
+        for(int i = 0; i< result.GetLength(0); ++i)
+            for(int j = 0; j< result.GetLength(1); ++j)
+                for(int k = 0; k< result.GetLength(2); ++k)
+                    if(i == 0 || j == 0 || k == 0) result[i,j,k] = -2;
+        result[1,1,1] = result[3,1,1] = result[1,3,1] = result[1,1,3] = result[3,1,1] = result[3,3,1] = result[3,1,3] = result[3,3,3] = -2;
+        return result;
+    }
+
+    private int[,,] emptyFieldLevel4()
+    {
+        var result = new int[_size,_size,_size];
+        // all fileds are unused
+        result.FillAllWithValue(-1);
+        return result;
+    }
+
+    private int[,,] emptyFieldLevel5()
+    {
+        var result = new int[_size,_size,_size];
+        // all fileds are unused
+        result.FillAllWithValue(-1);
+        return result;
+    }
+
+    private int[,,] generateLevel2(int [,,] result)
+    {
         var center = new Vector3((int)_size/2,(int)_size/2,(int)_size/2);
         var positionsAndSolidNeighbors = getDictionaryOfPositionsAndSolitNeighbors(result, center);
 
@@ -176,6 +259,7 @@ public class PuzzleBuilder
         }
 
         // center should always be 0 currently it is -1 because the algorithmen is not allowed to use the center field
+        Center = new Vector3(_size/2, _size/2, _size/2);
         result[_size/2,_size/2,_size/2] = 0;
         return result;
     }

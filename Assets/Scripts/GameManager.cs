@@ -150,7 +150,8 @@ public class GameManager : MonoBehaviour
         List<int> tileIdentifier = new List<int>();
 
         tileIdentifier.AddRange(Enumerable.Range(1, _cubeTextures.Length));
-        int[, ,] levelDesc = _puzzleBuilder.GenerateLevel(levelSize, tileIdentifier);
+        //int[, ,] levelDesc = _puzzleBuilder.GenerateLevel(roundIndex+1,tileIdentifier);
+        int[, ,] levelDesc = _puzzleBuilder.GenerateCubeLevel(levelSize, tileIdentifier);
 
         for (int x = 0; x < levelSize; ++x)
         {
@@ -158,7 +159,7 @@ public class GameManager : MonoBehaviour
             {
                 for (int z = 0; z < levelSize; ++z)
                 {
-                    if (levelDesc[x, y, z] == 0)
+                    if (levelDesc[x, y, z] == 0 || levelDesc[x,y,z] == -2)
                         continue;
 
                     GameObject gameObject = (GameObject)GameObject.Instantiate(CubePrefab, Vector3.zero, Quaternion.identity);
@@ -207,6 +208,7 @@ public class GameManager : MonoBehaviour
             {
                 CubeBehaviour cube = _level[(int)pos.x, (int)pos.y, (int)pos.z];
                 if (cube == null || cube.Active)
+                //if (cube != null && cube.Active || pos == _puzzleBuilder.Center)
                     ++numNeighbors;
             }
             if (numNeighbors >= 4)

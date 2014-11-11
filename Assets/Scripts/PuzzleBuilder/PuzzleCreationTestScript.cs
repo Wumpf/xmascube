@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class PuzzleCreationTestScript : MonoBehaviour {
@@ -7,7 +7,7 @@ public class PuzzleCreationTestScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         PuzzleBuilder pb = new PuzzleBuilder();
-        var puzzle = pb.GenerateLevel(Size,new System.Collections.Generic.List<int>() {  1, 2, 3, 4 } );
+        var puzzle = pb.GenerateCubeLevel(Size,new System.Collections.Generic.List<int>() {  1, 2, 3, 4 } );
 
         for(int i = 0; i < puzzle.GetLength(0); ++i)
             for(int j = 0; j < puzzle.GetLength(1); ++j)
