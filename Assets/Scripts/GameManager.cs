@@ -304,5 +304,10 @@ public class GameManager : MonoBehaviour
             _turns.Pop().Undo();
             _roundTimer.AddUndoPenalty();
         }
+		if(_selectedObject != null)
+		{
+			_selectedObject.Unselect();
+			_selectedObject = null;
+		}
     }
 }
