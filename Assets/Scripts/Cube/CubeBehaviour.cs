@@ -124,10 +124,10 @@ public class CubeBehaviour : MonoBehaviour {
 
 	private IEnumerator ChangeSizeCoroutine() 
 	{
-		float waitAppearSpeed = Time.deltaTime * 0.05f;
+		float waitAppearSpeed = Time.deltaTime * 0.1f;
 		while(selected)
 		{
-			if( (Time.timeSinceLevelLoad)%2 <1 )
+			if( (Time.timeSinceLevelLoad)%4 <2 )
 			{
 				this.transform.localScale += new Vector3(waitAppearSpeed, waitAppearSpeed, waitAppearSpeed);
 			}
